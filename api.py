@@ -111,13 +111,13 @@ def getcash():
 @app.route('/api/cash/<id>', methods=['GET'])
 def getusercash(id):
     cash_dict = {}
-    trade = Currency.query.filter_by(user_id=id).first()
+    trade = Currency.query.filter_by(user_id=id).all()
     if trade == None:
         return 'User not found.'
     else:
-        last_trade = trade
-        cash_dict[str(trade.user_id)] = {}
-        cash_dict[str(trade.user_id)]['cash'] = str(trade.cash)
+        last_trade = trade[len(trade) - 1]
+        cash_dict[str(last_trade.user_id)] = {}
+        cash_dict[str(last_trade.user_id)]['cash'] = str(last_trade.cash)
 
         return jsonify(cash_dict)
 
