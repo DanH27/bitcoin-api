@@ -102,8 +102,8 @@ def getcash():
 
     for cash in allcash:
         cash_dict[str(cash.user_id)] = {}
-    for cash in allcash:
-        cash_dict[str(cash.user_id)]['cash'] = str(cash.cash)
+    for ucash in allcash:
+        cash_dict[str(cash.user_id)]['cash'] = str(ucash.cash)
 
     return jsonify(cash_dict)
 
