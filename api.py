@@ -90,7 +90,7 @@ def gettrade(id):
         return '404 User Not Found'
     last_trade = currency[len(currency) - 1]
     trade_dict[str(last_trade.user_id)] = {}
-    trade_dict[str(last_trade.user_id)]['cash'] = str(last_trade.cash)
+    trade_dict[str(last_trade.user_id)]['btc'] = str(last_trade.btc)
 
     return jsonify(trade_dict)
 
