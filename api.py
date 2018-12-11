@@ -6,7 +6,8 @@ from datetime import datetime
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/bitrade'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/bitrade'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://teopiqfwhkgadm:b39ab93fd66a7c02bf68417cc1dc62d67ed9fb1b68b51939908978c2f12bc11a@ec2-54-163-245-64.compute-1.amazonaws.com:5432/d72h6r5qn3sd0'
 
 db = SQLAlchemy(app)
 
