@@ -6,13 +6,13 @@ from datetime import datetime
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/bitrade'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://teopiqfwhkgadm:b39ab93fd66a7c02bf68417cc1dc62d67ed9fb1b68b51939908978c2f12bc11a@ec2-54-163-245-64.compute-1.amazonaws.com:5432/d72h6r5qn3sd0'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/bitrade'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://teopiqfwhkgadm:b39ab93fd66a7c02bf68417cc1dc62d67ed9fb1b68b51939908978c2f12bc11a@ec2-54-163-245-64.compute-1.amazonaws.com:5432/d72h6r5qn3sd0'
 
 db = SQLAlchemy(app)
 
 
-
+#User model for ORM
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -26,6 +26,7 @@ class User(db.Model):
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
+#Currency model for ORM
 class Currency(db.Model):
     __tablename__ = 'currency'
     id = db.Column(db.Integer, primary_key=True)
@@ -37,6 +38,7 @@ class Currency(db.Model):
     def __repr__(self):
         return f"Currency('{self.btc}', '{self.date_posted}'"
 
+#Get all users
 @app.route('/api/users', methods=['GET'])
 def allUsers():
     usernames = {}
@@ -65,7 +67,7 @@ def getuser(user_id):
 
     return jsonify(user_dict)
 
-#Get all currency trades
+#Get all btc trades
 @app.route('/api/bitcoins/', methods=['GET'])
 def gettrades():
     trades_dict = {}
@@ -79,16 +81,43 @@ def gettrades():
     return jsonify(trades_dict)
 
 
-#Get specific user btc amt
+#Get users specific btc amt
 @app.route('/api/bitcoins/<id>', methods=['GET'])
 def gettrade(id):
     trade_dict = {}
-    trade = Currency.query.filter_by(user_id=id).all()
-    last_trade = trade[len(trade) - 1]
+    currency = Currency.query.filter_by(user_id=id).all()
+    last_trade = currency[len(currency) - 1]
     trade_dict[str(last_trade.user_id)] = {}
-    trade_dict[str(last_trade.user_id)]['btc'] = str(last_trade.btc)
+    trade_dict[str(last_trade.user_id)]['cash'] = str(last_trade.cash)
 
     return jsonify(trade_dict)
+
+#Get all users cash amt
+@app.route('/api/cash', methods=['GET'])
+def getcash():
+    cash_dict = {}
+    allcash = Currency.query.all()
+
+    for cash in allcash:
+        cash_dict[str(cash.user_id)] = {}
+    for cash in allcash:
+        cash_dict[str(cash.user_id)]['cash'] = str(cash.cash)
+
+    return jsonify(cash_dict)
+
+#Get specific user cash amt
+@app.route('/api/cash/<id>', methods=['GET'])
+def getusercash(id):
+    cash_dict = {}
+    trade = Currency.query.filter_by(user_id=id).first()
+    if trade == None:
+        return 'User not found.'
+    else:
+        last_trade = trade
+        cash_dict[str(trade.user_id)] = {}
+        cash_dict[str(trade.user_id)]['cash'] = str(trade.cash)
+
+        return jsonify(cash_dict)
 
 #Delete User
 @app.route('/api/user/<d_user_id>', methods=['DELETE'])
