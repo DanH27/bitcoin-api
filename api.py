@@ -105,6 +105,5 @@ def deleteUser(d_user_id):
         return 'User deleted'
 
 
-
-
-app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
